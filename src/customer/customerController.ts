@@ -39,4 +39,16 @@ export class CustomerController {
 
     res.json(customer);
   };
+
+  addAddress = async (req: Request, res: Response) => {
+    const { sub: userId } = req.auth;
+    const { address: text } = req.body;
+    const { id } = req.params;
+    const customer = await this.customerService.updateAddress(id, userId, text);
+    this.logger.info("Address added successfully", {
+      user: userId,
+      customer: customer._id,
+    });
+    return res.json(customer);
+  };
 }
