@@ -6,7 +6,7 @@ import { CouponController } from "./couponController";
 import { CouponService } from "./couponService";
 import logger from "../config/logger";
 import { asyncWrapper } from "../utils";
-import couponValidator from "./createCouponValidator"
+import couponValidator from "./createCouponValidator";
 
 const router = express.Router();
 
@@ -20,5 +20,7 @@ router.post(
   couponValidator,
   asyncWrapper(couponController.create),
 );
+
+router.post("/verify", asyncWrapper(couponController.verify));
 
 export default router;

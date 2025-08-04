@@ -17,7 +17,7 @@ export class CouponController {
       return next(createHttpError(400, result.array()[0].msg as string));
     }
 
-    if (req.body.tenantId !== req.auth.tenantId) {
+    if (req.body.tenantId !== req.auth.tenantId && req.auth.role !== "admin") {
       const error = createHttpError(403, "You don't have enough permissions");
       next(error);
       return;
