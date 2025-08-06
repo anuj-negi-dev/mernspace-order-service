@@ -1,10 +1,10 @@
-import { ToppingCacheModel } from "./toppingCache";
+import ToppingCacheModel from "./toppingCache";
 
 export const handleToppingUpdate = async (message: string) => {
   const topping = JSON.parse(message);
-  await ToppingCacheModel.updateOne(
+  return await ToppingCacheModel.updateOne(
     {
-      toppingId: topping.id,
+      toppingId: topping._id,
     },
     {
       $set: {

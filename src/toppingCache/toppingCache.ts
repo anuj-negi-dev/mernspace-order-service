@@ -22,7 +22,7 @@ const toppingCacheSchema = new mongoose.Schema<ToppingCache>({
   },
 });
 
-export const ToppingCacheModel = mongoose.model<ToppingCache>(
+export default mongoose.model<ToppingCache>(
   "ToppingCache",
   toppingCacheSchema,
 );
