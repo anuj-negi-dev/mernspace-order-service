@@ -1,32 +1,32 @@
 import { Consumer, EachMessagePayload, Kafka } from "kafkajs";
 import { MessageBroker } from "../types/broker";
+import { handleProductUpdate } from "../productCache/productUpdateHandler";
 
 export class KafkaBroker implements MessageBroker {
-  private consumner: Consumer;
+  private consumer: Consumer;
   constructor(clientId: string, brokers: string[]) {
     const kafka = new Kafka({ clientId, brokers });
 
-    this.consumner = kafka.consumer({ groupId: clientId });
+    this.consumer = kafka.consumer({ groupId: clientId });
   }
   async connectConsumer() {
-    await this.consumner.connect();
+    await this.consumer.connect();
   }
   async disconnectConsumer() {
-    await this.consumner.disconnect();
+    await this.consumer.disconnect();
   }
   async consumeMessage(topics: string[], fromBeginning: boolean = false) {
-    await this.consumner.subscribe({ topics, fromBeginning });
-    await this.consumner.run({
-      eachMessage: async ({
-        topic,
-        partition,
-        message,
-      }: EachMessagePayload) => {
-        console.log({
-          value: message.value.toString(),
-          topic,
-          partition,
-        });
+    await this.consumer.subscribe({ topics, fromBeginning });
+    await this.consumer.run({
+      eachMessage: async ({ topic, message }: EachMessagePayload) => {
+        switch (topic) {
+          case "product":
+            await handleProductUpdate(message.value.toString());
+            return;
+          default:
+            console.log(`No handler for topic: ${topic}`);
+            return;
+        }
       },
     });
   }
